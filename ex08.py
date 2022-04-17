@@ -6,7 +6,7 @@ print(formatter.format(True, False, True, True))
 print(formatter.format(formatter, formatter, formatter, formatter))
 print(formatter.format(
 	"Try your",
-	"Fucking own",
+	"Your own",
  	"text",
   	"here"
 ))
