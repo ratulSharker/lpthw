@@ -1,0 +1,35 @@
+print("'and' Table")
+print(f"True and True : {True and True}")
+print(f"True and False : {True and False}")
+print(f"False and True : {False and True}")
+print(f"False and False : {True and True}", end = "\n\n")
+
+print("'or' Table")
+print(f"True or True : {True or True}")
+print(f"True or False : {True or False}")
+print(f"False or True : {False or True}")
+print(f"False or False : {False or False}", end = "\n\n")
+
+print("'not' Table")
+print(f"not True : {not True}")
+print(f"not False : {not False}", end = "\n\n")
+
+print("'!=' Table")
+print(f"True != True : {True != True}")
+print(f"True != False : {True != False}")
+print(f"False != True : {False != True}")
+print(f"False != False : {False != False}", end = "\n\n")
+
+print("'==' Table")
+print(f"True == True : {True == True}")
+print(f"True == False : {True == False}")
+print(f"False == True : {False == True}")
+print(f"False == False : {False == False}", end = "\n\n")
+
+print("'>=' Table")
+print(f"1 >= 2 : {1 >= 2}")
+print(f"2 >= 1 : {2 >= 1}", end = "\n\n")
+
+print("'<=' Table")
+print(f"1 <= 2 : {1 <= 2}")
+print(f"2 <= 1 : {2 <= 1}", end = "\n\n")
