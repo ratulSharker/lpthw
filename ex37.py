@@ -97,3 +97,103 @@ else:
 
 print(end="\n\n\n")
 
+# except - try
+try:
+    print(1+"1")
+except TypeError as err:
+    print(err)
+
+# finally
+try:
+    print(name_not_declared)
+except NameError as err:
+    print(err)
+finally:
+    print("Anyway this block inside the `finally` will appear")
+
+# for
+arr = [1, 2, 3, 4, 5]
+for number in arr:
+    print(number)
+
+# from - import
+from os import getcwd
+print(getcwd())
+
+# global
+global_scopred_variable = "a"
+
+def some_function():
+    global global_scopred_variable
+    global_scopred_variable = "b"
+
+some_function()
+print(global_scopred_variable)
+
+# if
+if True:
+    print("This line going to be printed anyway")
+
+# in
+if 1 in [1, 2, 3, 4]:
+    print("one is inside `one`, `two`, `three`, `four`")
+
+# is
+one = 1
+if 1 is one:
+    print("1 is one")
+
+# lambda
+square = lambda x: x * x
+print(square(4))
+
+# not
+if not False:
+    print("not False means True")
+
+# or
+if 1 or False:
+    print("1 or False, evaluates to True")
+
+# pass
+def pass_if_val_is_one(val: int):
+    if val == 1:
+        pass
+    else:
+        print("not pass")
+
+pass_if_val_is_one(1)
+pass_if_val_is_one(2)
+
+# print
+print("Print this string")
+
+# raise
+try:
+    raise NameError("casually raising an exception")
+except NameError as err:
+    print(err)
+
+# return
+def add(a: int, b: int):
+    return a+b
+
+print(add(1, 2))
+
+# while
+index = 1
+while index < 10:
+    print(index)
+    index += 1
+
+# yield
+def odd_number_generator():
+    odd_number = 1
+    while odd_number < 10:
+        yield odd_number
+        odd_number += 2
+
+odd_numbers = odd_number_generator()
+
+for odd_number in odd_numbers:
+    print(odd_number)
