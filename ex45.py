@@ -35,6 +35,9 @@ class Board(object):
 		except Exception as err:
 			print(err)
 
+	def get_input(self, row: int, col: int) -> Player:
+		return self.input_matrix[row][col]
+
 class Canvas(object):
 
 	def __init__(self, board: Board):
@@ -47,7 +50,7 @@ class Canvas(object):
 			print(self.get_row_separator(), end="\n") # top of the row
 			
 			for col in range(0, self.board.board_size):
-				input = self.board.input_matrix[row][col]
+				input = self.board.get_input(row, col)
 				if input == None:
 					print("|   |", end="")
 				elif input == Player.PLAYER_ONE:
@@ -76,7 +79,46 @@ class WinnerCalculator(object):
 		self.board = board
 
 	def calculate(self) -> Player:
+		for row_or_col in range(0, self.board.board_size):
+
+			row_result = self.calculate_row_wise_winner(row_or_col)
+			if row_result != None:
+				return row_result
+
+			col_result = self.calculate_col_wise_winner(row_or_col)
+			if col_result != None:
+				return col_result
+		
 		return None
+
+	def calculate_row_wise_winner(self, row: int) -> Player:
+		board_size = self.board.board_size
+		col_0_row_x_player_input = self.board.get_input(row, 0)
+
+		if col_0_row_x_player_input == None:
+			return None
+
+		for col in range(1, board_size):
+			if self.board.get_input(row, col) != col_0_row_x_player_input:
+				return None
+
+		return col_0_row_x_player_input
+	
+	def calculate_col_wise_winner(self, col) -> Player:
+		board_size = self.board.board_size
+		col_x_row_0_player_input = self.board.get_input(0, col)
+
+		if col_x_row_0_player_input == None:
+			return None
+
+		for row in range(1, board_size):
+			if self.board.get_input(row, col) != col_x_row_0_player_input:
+				return None
+
+		return col_x_row_0_player_input
+
+	def calculate_diagonal_winner(self) -> Player:
+		pass
 
 class Engine(object):
 
@@ -87,13 +129,21 @@ class Engine(object):
 		self.next_player_turn = Player.PLAYER_ONE # make it random
 	
 	def play(self):
-		while self.winner_calculator.calculate() == None:
+		winner_player : Player = self.winner_calculator.calculate()
+		while winner_player  == None:
 			self.canvas.clear()
 			self.canvas.render()
 			row, col = self.prompt_row_col_for_next_player()
+
+			# TODO: Determine the draw state
 			self.board.take_input(row, col, self.next_player_turn)
 			self.switch_player()
 			self.canvas.render()
+
+			winner_player = self.winner_calculator.calculate()
+		
+		print(f"Player {winner_player} has win")
+
 
 	def switch_player(self):
 		if self.next_player_turn == Player.PLAYER_ONE:
