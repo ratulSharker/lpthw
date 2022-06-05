@@ -88,7 +88,15 @@ class WinnerCalculator(object):
 			col_result = self.calculate_col_wise_winner(row_or_col)
 			if col_result != None:
 				return col_result
-		
+
+			first_diagonal_result = self.calculate_first_diagonal_winner()
+			if first_diagonal_result != None:
+				return first_diagonal_result
+			
+			second_diagonal_result = self.calculate_second_diagonal_winner()
+			if second_diagonal_result != None:
+				return second_diagonal_result
+
 		return None
 
 	def calculate_row_wise_winner(self, row: int) -> Player:
@@ -117,8 +125,45 @@ class WinnerCalculator(object):
 
 		return col_x_row_0_player_input
 
-	def calculate_diagonal_winner(self) -> Player:
-		pass
+	def calculate_first_diagonal_winner(self) -> Player:
+		col_0_row_0_player = self.board.get_input(0, 0)
+
+		if col_0_row_0_player == None:
+			return None
+		
+		for row_col in range(1, self.board.board_size):
+			col_x_row_x_player = self.board.get_input(row_col, row_col)
+
+			if col_0_row_0_player != col_x_row_x_player:
+				return None
+		
+		return col_0_row_0_player
+	
+	def calculate_second_diagonal_winner(self) -> Player:
+		last_row_index = self.board.board_size - 1
+		col_0_row_last_player = self.board.get_input(last_row_index, 0)
+
+		if col_0_row_last_player == None:
+			return None
+
+		for index in range(1, self.board.board_size):
+			col = index
+			row = last_row_index - index
+			col_0_row_x_player = self.board.get_input(row, col)
+
+			if col_0_row_last_player != col_0_row_x_player:
+				return None
+
+		return col_0_row_last_player
+
+	def calculate_is_game_tie(self) -> bool:
+		# Very trivial implementation of saying draw
+		for row in range(0, self.board.board_size):
+			for col in range(0, self.board.board_size):
+				player_input = self.board.get_input(row, col)
+				if player_input == None:
+					return False
+		return True
 
 class Engine(object):
 
@@ -130,20 +175,23 @@ class Engine(object):
 	
 	def play(self):
 		winner_player : Player = self.winner_calculator.calculate()
-		while winner_player  == None:
+		game_tie = False
+		while winner_player  == None and game_tie == False:
 			self.canvas.clear()
 			self.canvas.render()
 			row, col = self.prompt_row_col_for_next_player()
 
-			# TODO: Determine the draw state
 			self.board.take_input(row, col, self.next_player_turn)
 			self.switch_player()
 			self.canvas.render()
 
 			winner_player = self.winner_calculator.calculate()
+			game_tie = self.winner_calculator.calculate_is_game_tie()
 		
-		print(f"Player {winner_player} has win")
-
+		if game_tie:
+			print("Game Tie")
+		else:
+			print(f"Player {winner_player} has win")
 
 	def switch_player(self):
 		if self.next_player_turn == Player.PLAYER_ONE:
@@ -154,7 +202,6 @@ class Engine(object):
 	def prompt_row_col_for_next_player(self) -> Tuple[int, int]:		
 		print(f"Input for Player {self.next_player_turn}")
 
-		# TODO: take row and column at once
 		col = int(input(f"Enter the col number  (0 ~ {self.board.board_size - 1}) > "))
 		row = int(input(f"Enter the row number  (0 ~ {self.board.board_size - 1}) > "))
 		return (row, col)
